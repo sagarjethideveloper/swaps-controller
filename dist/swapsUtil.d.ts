@@ -7,12 +7,8 @@ export declare const BSC_CHAIN_ID = "56";
 export declare const SWAPS_TESTNET_CHAIN_ID = "1337";
 export declare const ETH_SWAPS_CONTRACT_ADDRESS = "0x881d40237659c251811cec9c364ef91dc08d300c";
 export declare const BSC_SWAPS_CONTRACT_ADDRESS = "0x1a1ec25dc08e98e5e93f1104b5e5cdd298707d31";
-export declare const WETH_CONTRACT_ADDRESS = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
 export declare const SWAPS_CONTRACT_ADDRESSES: {
     [key: string]: string;
-};
-export declare const ALLOWED_CONTRACT_ADDRESSES: {
-    [key: string]: string[];
 };
 export declare const NATIVE_SWAPS_TOKEN_ADDRESS = "0x0000000000000000000000000000000000000000";
 export declare const ETH_SWAPS_TOKEN_OBJECT: SwapsToken;
@@ -31,7 +27,6 @@ export declare enum SwapsError {
 }
 export declare function getNativeSwapsToken(chainId: string): SwapsToken;
 export declare function getSwapsContractAddress(chainId: string): string;
-export declare function isValidContractAddress(chainId: string, contract: string | undefined): boolean;
 export declare const getBaseApiURL: (type: APIType, chainId: string) => string;
 export declare function fetchTradesInfo({ slippage, sourceToken, sourceAmount, destinationToken, walletAddress, exchangeList, }: APIFetchQuotesParams, abortSignal: AbortSignal | null, chainId: string, clientId?: string): Promise<{
     [key: string]: Quote;

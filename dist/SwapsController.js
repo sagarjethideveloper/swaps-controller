@@ -90,6 +90,7 @@ class SwapsController extends controllers_1.BaseController {
                     address: '',
                     symbol: '',
                 },
+                accountBalance: '0x',
             },
             topAggSavings: null,
             aggregatorMetadata: null,
@@ -143,8 +144,8 @@ class SwapsController extends controllers_1.BaseController {
      * @param gasPrice - Gas price in hex format to calculate the `QuotesValue` with
      */
     calculateQuoteValues(quote, gasPrice, gasLimit) {
-        const { destinationTokenInfo } = this.state.fetchParamsMetaData;
-        const { aggregator, averageGas, maxGas, destinationAmount = 0, fee: metaMaskFee, sourceAmount, sourceToken, trade, gasEstimateWithRefund, gasEstimate, gasMultiplier, approvalNeeded, destinationTokenRate, } = quote;
+        const { destinationTokenInfo, destinationTokenConversionRate, } = this.state.fetchParamsMetaData;
+        const { aggregator, averageGas, maxGas, destinationAmount = 0, fee: metaMaskFee, sourceAmount, sourceToken, trade, gasEstimateWithRefund, gasEstimate, gasMultiplier, approvalNeeded, } = quote;
         // trade gas
         const { tradeGasLimit, tradeMaxGasLimit } = swapsUtil_1.calculateGasLimits(Boolean(approvalNeeded), gasEstimateWithRefund, gasEstimate, averageGas, maxGas, gasMultiplier, gasLimit);
         const totalGasInWei = tradeGasLimit.times(gasPrice, 16);
@@ -172,7 +173,7 @@ class SwapsController extends controllers_1.BaseController {
             .div(100);
         const destinationAmountBeforeMetaMaskFee = decimalAdjustedDestinationAmount.div(tokenPercentageOfPreFeeDestAmount);
         const metaMaskFeeInTokens = destinationAmountBeforeMetaMaskFee.minus(decimalAdjustedDestinationAmount);
-        const conversionRate = destinationTokenRate || 1;
+        const conversionRate = destinationTokenConversionRate || 1;
         const ethValueOfTokens = decimalAdjustedDestinationAmount.times(conversionRate, 10);
         // the more tokens the better
         const overallValueOfQuote = ethValueOfTokens.minus(ethFee, 10);

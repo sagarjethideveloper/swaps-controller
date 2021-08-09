@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.constructTxParams = exports.estimateGas = exports.calcTokenAmount = exports.calculateGasLimits = exports.getMedianEthValueQuote = exports.getMedian = exports.getSwapsTokensReceived = exports.calculateGasEstimateWithRefund = exports.fetchGasPrices = exports.fetchSwapsFeatureLiveness = exports.fetchTopAssets = exports.fetchAggregatorMetadata = exports.fetchTokens = exports.fetchTradesInfo = exports.getBaseApiURL = exports.isValidContractAddress = exports.getSwapsContractAddress = exports.getNativeSwapsToken = exports.SwapsError = exports.DEFAULT_ERC20_APPROVE_GAS = exports.BSC_SWAPS_TOKEN_OBJECT = exports.ETH_SWAPS_TOKEN_OBJECT = exports.NATIVE_SWAPS_TOKEN_ADDRESS = exports.ALLOWED_CONTRACT_ADDRESSES = exports.SWAPS_CONTRACT_ADDRESSES = exports.WETH_CONTRACT_ADDRESS = exports.BSC_SWAPS_CONTRACT_ADDRESS = exports.ETH_SWAPS_CONTRACT_ADDRESS = exports.SWAPS_TESTNET_CHAIN_ID = exports.BSC_CHAIN_ID = exports.ETH_CHAIN_ID = void 0;
+exports.constructTxParams = exports.estimateGas = exports.calcTokenAmount = exports.calculateGasLimits = exports.getMedianEthValueQuote = exports.getMedian = exports.getSwapsTokensReceived = exports.calculateGasEstimateWithRefund = exports.fetchGasPrices = exports.fetchSwapsFeatureLiveness = exports.fetchTopAssets = exports.fetchAggregatorMetadata = exports.fetchTokens = exports.fetchTradesInfo = exports.getBaseApiURL = exports.getSwapsContractAddress = exports.getNativeSwapsToken = exports.SwapsError = exports.DEFAULT_ERC20_APPROVE_GAS = exports.BSC_SWAPS_TOKEN_OBJECT = exports.ETH_SWAPS_TOKEN_OBJECT = exports.NATIVE_SWAPS_TOKEN_ADDRESS = exports.SWAPS_CONTRACT_ADDRESSES = exports.BSC_SWAPS_CONTRACT_ADDRESS = exports.ETH_SWAPS_CONTRACT_ADDRESS = exports.SWAPS_TESTNET_CHAIN_ID = exports.BSC_CHAIN_ID = exports.ETH_CHAIN_ID = void 0;
 const controllers_1 = require("@metamask/controllers");
 const bignumber_js_1 = __importDefault(require("bignumber.js"));
 const ethereumjs_util_1 = require("ethereumjs-util");
@@ -23,22 +23,10 @@ exports.BSC_CHAIN_ID = '56';
 exports.SWAPS_TESTNET_CHAIN_ID = '1337';
 exports.ETH_SWAPS_CONTRACT_ADDRESS = '0x881d40237659c251811cec9c364ef91dc08d300c';
 exports.BSC_SWAPS_CONTRACT_ADDRESS = '0x1a1ec25dc08e98e5e93f1104b5e5cdd298707d31';
-exports.WETH_CONTRACT_ADDRESS = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
 exports.SWAPS_CONTRACT_ADDRESSES = {
     [exports.ETH_CHAIN_ID]: exports.ETH_SWAPS_CONTRACT_ADDRESS,
     [exports.SWAPS_TESTNET_CHAIN_ID]: exports.ETH_SWAPS_CONTRACT_ADDRESS,
     [exports.BSC_CHAIN_ID]: exports.BSC_SWAPS_CONTRACT_ADDRESS,
-};
-exports.ALLOWED_CONTRACT_ADDRESSES = {
-    [exports.ETH_CHAIN_ID]: [
-        exports.SWAPS_CONTRACT_ADDRESSES[exports.ETH_CHAIN_ID],
-        exports.WETH_CONTRACT_ADDRESS,
-    ],
-    [exports.SWAPS_TESTNET_CHAIN_ID]: [
-        exports.SWAPS_CONTRACT_ADDRESSES[exports.SWAPS_TESTNET_CHAIN_ID],
-        exports.WETH_CONTRACT_ADDRESS,
-    ],
-    [exports.BSC_CHAIN_ID]: [exports.SWAPS_CONTRACT_ADDRESSES[exports.BSC_CHAIN_ID]],
 };
 exports.NATIVE_SWAPS_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000';
 const TOKEN_TRANSFER_LOG_TOPIC_HASH = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
@@ -88,13 +76,6 @@ function getSwapsContractAddress(chainId) {
     return exports.SWAPS_CONTRACT_ADDRESSES[chainId];
 }
 exports.getSwapsContractAddress = getSwapsContractAddress;
-function isValidContractAddress(chainId, contract) {
-    if (!contract) {
-        return false;
-    }
-    return exports.ALLOWED_CONTRACT_ADDRESSES[chainId].some((allowedContract) => contract === allowedContract);
-}
-exports.isValidContractAddress = isValidContractAddress;
 const getBaseApiURL = function (type, chainId) {
     const hostURL = API_BASE_HOST_URL[chainId];
     switch (type) {
@@ -138,7 +119,7 @@ function fetchTradesInfo({ slippage, sourceToken, sourceAmount, destinationToken
             var _a, _b;
             if (!quote.error &&
                 quote.trade &&
-                isValidContractAddress(chainId, (_b = (_a = quote.trade) === null || _a === void 0 ? void 0 : _a.to) === null || _b === void 0 ? void 0 : _b.toLowerCase())) {
+                ((_b = (_a = quote.trade) === null || _a === void 0 ? void 0 : _a.to) === null || _b === void 0 ? void 0 : _b.toLowerCase()) === getSwapsContractAddress(chainId)) {
                 const constructedTrade = constructTxParams({
                     to: quote.trade.to,
                     from: quote.trade.from,
